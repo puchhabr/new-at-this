@@ -1,0 +1,15 @@
+impvol <- function(S,X,r,n,O, tol,itn){
+i=1 #iteration number
+guess <- 0.1 #initial guess of volatility
+vol <- guess
+while (i < itn) { #Gap between theoritical and market price
+p1 <- eur_call(S,X,r,n,vol) - O
+p2 <- eur_call(S,X,r,n,vol+tol) - O
+dp <- (p2-p1)/tol #differential term
+vol_1 <- vol - (p1/dp) #vol(t+1)=vol(t)-(p(vol)/diff)
+i <- i+1
+if (abs(vol_1 - vol) < tol) break #condition to stop
+vol <- vol_1
+}
+return(vol)
+}
