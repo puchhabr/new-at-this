@@ -1,0 +1,28 @@
+#Binomial option pricing
+
+eur_call <- function(S,X,r,n,csigma){
+dt <- (n/n)/12
+u <- exp(csigma*sqrt(dt)) #define 'u' and 'd'
+d <- 1/u
+b_tree <- matrix(0,nrow = n+1, ncol = n+1) # create price matrix
+prob <- function(r,dt,u,d){ #calculate probability
+return((exp(r*dt)-d)/(u-d))
+}
+p <- prob(r,dt,u,d)
+for (i in 1:nrow(b_tree)) {
+for (j in 1:i) {
+b_tree[i,j] <- S * u^(j-1) * d^((i-1)-(j-1)) #fill matrix
+}
+}
+opt_tree <- matrix(0, nrow = n+1,ncol = n+1) #Create a new value matrix
+for (i in 1:nrow(opt_tree)) {
+opt_tree[nrow(opt_tree),i] <- max(b_tree[nrow(b_tree),i]-X,0) # Fill matrix at N time
+period
+}
+for (i in (nrow(opt_tree)-1):1) {
+for (j in i:1) { #fill value matrix backwards
+opt_tree[i,j] <- (((opt_tree[i+1,j+1])*p)+((opt_tree[i+1,j])*(1-p)))/(exp(r*dt))
+}
+}
+return(opt_tree[1,1])
+}
